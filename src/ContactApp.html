@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Contact App</title>
+    <style>
+        /* [TAG: THE DECORATION] */
+        /* This just makes our app look neat, like a simple mobile app */
+        body { font-family: Arial; padding: 20px; max-width: 400px; }
+        input, button { padding: 5px; margin: 5px 0; }
+        li { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+    <h2>📱 My Contacts</h2>
+    
+    <label>Name:</label><br>
+    <input type="text" id="nameBox" placeholder="Type name..."><br>
+    
+    <label>Phone:</label><br>
+    <input type="text" id="phoneBox" placeholder="Type phone..."><br>
+    
+    <button onclick="addContact()">Add Contact</button>
+
+    <hr>
+
+    <ul id="contactList"></ul>
+
+    <script>
+        // [TAG: THE MEMORY]
+        // We use an 'Array' (think of it as a digital box) to remember the contacts.
+        let contacts = [];
+
+        // [TAG: ADD METHOD]
+        // Takes what you typed in the boxes and saves it into our digital box.
+        function addContact() {
+            let name = document.getElementById("nameBox").value;
+            let phone = document.getElementById("phoneBox").value;
+            
+            if(name !== "" && phone !== "") {
+                contacts.push({ name: name, phone: phone }); // Save it
+                document.getElementById("nameBox").value = ""; // Clear the typing box
+                document.getElementById("phoneBox").value = ""; // Clear the typing box
+                refreshScreen(); // Update the list on the screen
+            } else {
+                alert("Please type both a name and a phone number!");
+            }
+        }
+
+        // [TAG: REFRESH METHOD]
+        // This clears the old screen and redraws the list so it is always up to date.
+        function refreshScreen() {
+            let list = document.getElementById("contactList");
+            list.innerHTML = ""; // Wipe the old list visual
+
+            for(let i = 0; i < contacts.length; i++) {
+                // Draw the name, phone, and add a mini Edit and Delete button next to them
+                list.innerHTML += "<li>" + contacts[i].name + " - " + contacts[i].phone + 
+                " <button onclick='editContact(" + i + ")'>Edit</button>" +
+                " <button onclick='deleteContact(" + i + ")'>Delete</button></li>";
+            }
+        }
+
+        // [TAG: DELETE METHOD]
+        // Gets the exact position of the contact and throws it away.
+        function deleteContact(index) {
+            contacts.splice(index, 1); // 'Splice' means to cut out 1 item
+            refreshScreen(); // Update the screen so the deleted person disappears
+        }
+
+        // [TAG: EDIT METHOD]
+        // Opens a pop-up asking you to type a new name and phone number.
+        function editContact(index) {
+            let newName = prompt("Type new name:", contacts[index].name);
+            let newPhone = prompt("Type new phone:", contacts[index].phone);
+            
+            // If you didn't click 'Cancel', it overwrites the old information
+            if(newName !== null && newPhone !== null) {
+                contacts[index].name = newName; 
+                contacts[index].phone = newPhone; 
+                refreshScreen(); // Update the screen to show the new info
+            }
+        }
+    </script>
+</body>
+</html>
